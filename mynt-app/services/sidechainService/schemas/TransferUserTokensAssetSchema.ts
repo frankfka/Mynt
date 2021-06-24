@@ -1,7 +1,7 @@
-import { Schema } from 'lisk-sdk';
-import { LISK_APP_PREFIX } from '../../../util/constants';
+import { codec } from '@liskhq/lisk-client';
+import { LISK_APP_PREFIX } from '../../../../mynt-sidechain/src/app/util/constants';
 
-const TransferUserTokensAssetSchema: Schema = {
+const TransferUserTokensAssetSchema: codec.Schema = {
   // Unique identifier of the schema throughout the system
   $id: `${LISK_APP_PREFIX}/user-token/transfer`,
   // Root type must be type object

@@ -3,4 +3,5 @@ export default interface TransferUserTokenAssetData {
   symbol: string;
   recipientAddress: Buffer;
   amount: number;
+  shouldDestroy: boolean;
 }

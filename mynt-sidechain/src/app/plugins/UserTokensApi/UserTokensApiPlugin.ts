@@ -49,7 +49,9 @@ export class UserTokensApiPlugin extends BasePlugin {
       );
 
       res.json({
-        userTokens: allExistingTokens,
+        data: {
+          userTokens: allExistingTokens,
+        },
       });
     });
 

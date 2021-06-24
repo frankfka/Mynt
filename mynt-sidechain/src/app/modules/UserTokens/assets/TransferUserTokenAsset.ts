@@ -1,6 +1,9 @@
 import { ApplyAssetContext, BaseAsset, ValidateAssetContext } from 'lisk-sdk';
 import { find } from 'lodash';
 import TransferUserTokensAssetSchema from '../schemas/TransferUserTokensAssetSchema';
+import getAllUserTokens from '../stateHandlers/getAllUserTokens';
+import setAllUserTokens from '../stateHandlers/setAllUserTokens';
+import LiskUserToken from '../types/LiskUserToken';
 import TransferUserTokenAssetData from '../types/TransferUserTokenAssetData';
 import UserTokenBalance from '../types/UserTokenBalance';
 import UserTokensModuleAccount from '../types/UserTokensModuleAccount';
@@ -29,6 +32,7 @@ export class TransferUserTokenAsset extends BaseAsset {
 
     const userTokenSymbol = asset.symbol;
     const transferAmount = asset.amount;
+    const shouldDestroyAsset = asset.shouldDestroy;
 
     const sender = await stateStore.account.get<UserTokensModuleAccount>(
       senderAddress
@@ -49,6 +53,28 @@ export class TransferUserTokenAsset extends BaseAsset {
 
     // Save sender
     await stateStore.account.set(senderAddress, sender);
+
+    if (shouldDestroyAsset) {
+      // Update circulating balance
+      const allTokens = await getAllUserTokens(stateStore);
+      const globalToken = find<LiskUserToken>(
+        allTokens,
+        (token: LiskUserToken) => token.symbol === asset.symbol
+      );
+
+      if (!globalToken) {
+        throw new Error(
+          `The user token ${asset.symbol} somehow does not exist in globals`
+        );
+      }
+
+      // Save new supply
+      globalToken.circulatingSupply -= transferAmount;
+      await setAllUserTokens(stateStore, allTokens);
+
+      // Skip debiting balance
+      return;
+    }
 
     // Debit balance for recipient, adding to existing balance if it exists
     const { recipientAddress } = asset;

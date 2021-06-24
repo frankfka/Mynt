@@ -1,107 +1,4 @@
-type UserID = string;
-type TokenSymbol = string;
-
-interface User {
-  id: UserID;
-  name: string;
-  email: string;
-
-  // Optionals - if we need more stuff to render
-  profileDescription: string;
-
-  // Rapyd Data
-  rapyd: {
-    eWalletId: string; // Used to get eWallet accounts
-    // For rapydCollect (buying other tokens)
-    collect: {
-      customerId: string; // Can be used to get payment methods
-      paymentMethods: CardPaymentMethod[];
-    };
-    // For payouts
-    disburse: {
-      beneficiaries: Record<string, BankBeneficiary>; // Keyed by beneficiary ID (only support banks)
-    };
-  };
-
-  // Sidechain Data
-  sidechain: {
-    passphrase: string;
-    privateKey: string;
-    publicKey: string;
-    binaryAddress: string;
-    address: string;
-  };
-
-  // Token Sales
-  activeTokenSales: Symbol[];
-
-  // Token Redemptions
-  activeTokenRedemptions: Record<string, string[]>; // Symbol to list of redemption IDs
-}
-
-interface CardPaymentMethod {
-  id: string;
-  image: string;
-  last4: string;
-  expirationYear: string;
-  expirationMonth: string;
-}
-
-interface BankBeneficiary {
-  id: string;
-  country: 'US';
-  currency: 'USD';
-  entityType: 'individual';
-  accountNumber: string;
-  defaultPayoutMethodType: 'us_general_bank';
-}
-
-interface Cost {
-  amount: number;
-  currency: 'USD';
-}
-
-interface TokenSale {
-  symbol: string; // This is the ID - can only have one sale per symbol
-  parentUserId: UserID;
-  unitCost: Cost;
-  availableQuantity: number; // Remaining available quantity
-  description: string;
-}
-
-type TokenRedemptionID = string;
-
-interface TokenRedemption {
-  id: TokenRedemptionID; // Can have multiple redemptions per symbol
-  parentUserId: UserID;
-  title: string;
-  description: string;
-  symbol: string;
-  unitCost: number; // In terms of the symbol (must be less than available supply!)
-  availableQuantity: number; // Remaining qty
-}
-
-interface DatabaseSchema {
-  users: Record<UserID, User>;
-  tokenSales: Record<TokenSymbol, TokenSale>;
-  tokenRedemptions: Record<TokenRedemptionID, TokenRedemption>;
-}
-
-interface RapydSender {
-  id: string;
-  country: 'US';
-  entityType: 'company';
-  companyName: string;
-  currency: 'USD';
-  identificationType: string;
-  identificationValue: string;
-}
-
-interface GlobalData {
-  rapyd: {
-    sender: RapydSender; // = RapydMintSender
-  };
-}
+import { DatabaseSchema, GlobalData } from './types/DatabaseSchema';
 
 export const mockGlobalData: GlobalData = {
   rapyd: {
@@ -138,6 +35,7 @@ export const mockDatabaseData: DatabaseSchema = {
               last4: '1111',
               expirationYear: '22',
               expirationMonth: '12',
+              category: 'card',
             },
             {
               id: 'card_84de4c1ac7b70d8d6daf2411e6d69f19',
@@ -146,6 +44,7 @@ export const mockDatabaseData: DatabaseSchema = {
               last4: '1111',
               expirationYear: '22',
               expirationMonth: '12',
+              category: 'card',
             },
           ],
         },
@@ -196,6 +95,7 @@ export const mockDatabaseData: DatabaseSchema = {
               last4: '1111',
               expirationYear: '22',
               expirationMonth: '12',
+              category: 'card',
             },
             {
               id: 'card_bde6ce1138f9631a2cdd9c18d07b2a0c',
@@ -204,6 +104,7 @@ export const mockDatabaseData: DatabaseSchema = {
               last4: '1111',
               expirationYear: '25',
               expirationMonth: '09',
+              category: 'card',
             },
           ],
         },
