@@ -1,7 +1,7 @@
-import { create } from 'domain';
 import { v4 as uuidv4 } from 'uuid';
 import User from '../../types/User';
 import DatabaseService from '../database/databaseService';
+import RapydApiService from '../rapydService/rapydApiService';
 import SidechainService from '../sidechainService/sidechainService';
 import CreatePayoutRequestParams from './types/CreatePayoutRequestParams';
 import CreateUserTokenParams from './types/CreateUserTokenParams';
@@ -13,13 +13,16 @@ import RedeemUserTokenParams from './types/RedeemUserTokenParams';
 export default class AppService {
   private readonly sidechainService: SidechainService;
   private readonly databaseService: DatabaseService;
+  private readonly rapydService: RapydApiService;
 
   constructor(
     sidechainService: SidechainService,
-    databaseService: DatabaseService
+    databaseService: DatabaseService,
+    rapydService: RapydApiService
   ) {
     this.sidechainService = sidechainService;
     this.databaseService = databaseService;
+    this.rapydService = rapydService;
   }
 
   async getUser(userId: string): Promise<User> {
@@ -34,9 +37,17 @@ export default class AppService {
       dbData.sidechain.binaryAddress
     );
 
+    // Call rapydService to get latest eWallet data
+    const rapydWalletData = await this.rapydService.retrieveRapydWallet(
+      dbData.rapyd.eWalletId
+    );
+
     return {
       dbData,
       sidechainData: sidechainData.userTokensModule,
+      rapydData: {
+        wallet: rapydWalletData,
+      },
     };
   }
 
@@ -79,7 +90,6 @@ export default class AppService {
     return tokenSale;
   }
 
-  // TODO: Test
   async purchaseUserToken(purchaseUserTokenParams: PurchaseUserTokenParams) {
     // Get token sale object
     const tokenSale = await this.databaseService.getTokenSale(
@@ -102,7 +112,34 @@ export default class AppService {
       throw Error('Seller does not existing for purchasing user token');
     }
 
-    // TODO: Create payment through Rapyd
+    let paymentId: string | undefined;
+    const paymentMethod = purchaseUserTokenParams.paymentMethod;
+    const paymentAmount =
+      purchaseUserTokenParams.amount * tokenSale.unitCost.amount;
+
+    if (paymentMethod.category === 'card') {
+      // Create a card payment
+      const paymentResponse = await this.rapydService.createPayment(
+        paymentMethod.id,
+        seller.rapyd.eWalletId,
+        paymentAmount,
+        'USD'
+      );
+      paymentId = paymentResponse.paymentId;
+    } else {
+      // Transfer payment
+      const paymentResponse = await this.rapydService.transferWalletFunds(
+        paymentMethod.id,
+        seller.rapyd.eWalletId,
+        paymentAmount,
+        'USD'
+      );
+      paymentId = paymentResponse.paymentId;
+    }
+
+    if (!paymentId) {
+      throw Error('Payment failed');
+    }
 
     // Transfer tokens
     await this.sidechainService.transferUserToken({
@@ -116,9 +153,12 @@ export default class AppService {
     // Update sale remaining quantity
     tokenSale.availableQuantity -= purchaseUserTokenParams.amount;
     await this.databaseService.saveTokenSale(tokenSale);
+
+    return {
+      paymentId,
+    };
   }
 
-  // TODO: Test
   async createUserTokenRedemption(
     createRedemptionParams: CreateUserTokenRedemptionParams
   ) {
@@ -161,7 +201,6 @@ export default class AppService {
     return tokenRedemption;
   }
 
-  // TODO: Test
   async redeemUserToken(redemptionParams: RedeemUserTokenParams) {
     // Get user data for address
     const tokenRedemption = await this.databaseService.getTokenRedemption(

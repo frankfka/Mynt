@@ -1,13 +1,13 @@
-import {
-  RapydCardPaymentMethodData,
-  RapydPaymentMethod,
-} from './models/RapydPaymentMethod';
-import { RapydCustomer } from './models/RapydCustomer';
-import { RapydWallet, RapydWalletAccount } from './models/RapydWallet';
-
 /**
  * Parsers to extract data from Rapyd API responses into our models
  */
+
+import { RapydCustomer } from './types/RapydCustomer';
+import {
+  RapydCardPaymentMethodData,
+  RapydPaymentMethod,
+} from './types/RapydPaymentMethod';
+import { RapydWallet, RapydWalletAccount } from './types/RapydWallet';
 
 export type RapydCreatePaymentResponse = {
   paymentId: string;
@@ -52,17 +52,17 @@ export const parseRetrieveCustomerResponse = (
     (paymentMethodData: any) => {
       const paymentMethod: RapydPaymentMethod = {
         id: paymentMethodData.id,
-        type: paymentMethodData.type,
         category: paymentMethodData.category,
-        imageUrl: paymentMethodData.image,
+        image: paymentMethodData.image,
       };
 
       const cardPaymentMethodData: Partial<RapydCardPaymentMethodData> = {};
       if (paymentMethod.category === 'card') {
-        cardPaymentMethodData.name = paymentMethodData.name;
-        cardPaymentMethodData.lastFourDigits = paymentMethodData.last4;
-        cardPaymentMethodData.expYear = paymentMethodData.expiration_year;
-        cardPaymentMethodData.expMonth = paymentMethodData.expiration_month;
+        cardPaymentMethodData.last4 = paymentMethodData.last4;
+        cardPaymentMethodData.expirationYear =
+          paymentMethodData.expiration_year;
+        cardPaymentMethodData.expirationMonth =
+          paymentMethodData.expiration_month;
       }
 
       return {

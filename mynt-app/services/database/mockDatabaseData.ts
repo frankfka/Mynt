@@ -85,7 +85,7 @@ export const mockDatabaseData: DatabaseSchema = {
       profileDescription: '',
 
       rapyd: {
-        eWalletId: 'ewallet_68abae90037a6768f64ce4389675d576',
+        eWalletId: 'ewallet_774ca34497f10f4229037726e6e4a1f1',
         collect: {
           customerId: 'cus_a9afcf0ffd1cd7020d2650df9514397c',
           paymentMethods: [
@@ -110,7 +110,7 @@ export const mockDatabaseData: DatabaseSchema = {
         },
         disburse: {
           beneficiaries: {
-            beneficiary_6726ae3b4205931db1efbb1443d176fe: {
+            beneficiary_e345992937ae9e4d6a25896383e03895: {
               id: 'beneficiary_e345992937ae9e4d6a25896383e03895',
               country: 'US',
               currency: 'USD',

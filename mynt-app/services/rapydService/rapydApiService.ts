@@ -10,8 +10,9 @@ import {
   RapydWalletTransferResponse,
   RetrieveRapydWalletResponse,
 } from './rapydApiResponseParsers';
+import RapydDisburseRequestParams from './types/RapydDisburseRequestParams';
 
-class RapydApiService {
+export default class RapydApiService {
   private readonly accessKey: string;
   private readonly secretKey: string;
   private readonly rapydEndpoint: string = 'https://sandboxapi.rapyd.net';
@@ -26,6 +27,25 @@ class RapydApiService {
 
     this.accessKey = process.env.RAPYD_ACCESS_KEY;
     this.secretKey = process.env.RAPYD_SECRET_KEY;
+  }
+
+  // Disburse payout API
+  async createPayoutRequest(disburseRequestParams: RapydDisburseRequestParams) {
+    const responseJson = await this.post('/v1/payouts', {
+      beneficiary: disburseRequestParams.beneficiaryId,
+      beneficiary_country: 'US',
+      beneficiary_entity_type: 'individual',
+      ewallet: disburseRequestParams.sourceWalletId,
+      payout_amount: disburseRequestParams.amount,
+      payout_currency: 'USD',
+      payout_method_type: 'us_general_bank',
+      sender: disburseRequestParams.senderId,
+      sender_country: 'US',
+      sender_currency: 'USD',
+      sender_entity_type: 'company',
+    });
+
+    return responseJson;
   }
 
   // Create Payment API
@@ -174,7 +194,3 @@ class RapydApiService {
     return [salt, timestamp, stringSignature];
   }
 }
-
-// This service requires env vars
-require('dotenv').config();
-export const rapydApiService = new RapydApiService();
