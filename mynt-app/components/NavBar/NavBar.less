@@ -1,0 +1,26 @@
+@import "../../styles/globals";
+
+.NavBar {
+  width: 100%;
+  display: flex;
+  background-color: @primary-color-dark;
+  padding: @padding-sm;
+
+  .MenuItems {
+    display: flex;
+
+    .MenuLinkButton {
+      padding: 0 @padding-md;
+      color: @text-color-inverse-secondary;
+      :hover {
+        color: @text-color-inverse;
+      }
+    }
+    .CreateTokenButton {
+      margin: 0 @margin-md;
+    }
+    .ProfileAvatar {
+      margin: 0 @margin-md;
+    }
+  }
+}

@@ -242,9 +242,12 @@ export default class AppService {
     await this.databaseService.saveTokenRedemption(tokenRedemption);
   }
 
-  // TODO: Test
   async createPayoutRequest(payoutRequestParams: CreatePayoutRequestParams) {
-    // payoutMethodType = us_general_bank?
-    // TODO: Call rapydService to create payout
+    return this.rapydService.createPayoutRequest({
+      amount: payoutRequestParams.cost.amount,
+      beneficiaryId: payoutRequestParams.beneficiaryId,
+      senderId: this.databaseService.getGlobalData().rapyd.sender.id,
+      sourceWalletId: payoutRequestParams.ewalletId,
+    });
   }
 }

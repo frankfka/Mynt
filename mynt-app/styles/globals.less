@@ -1,0 +1,27 @@
+@import "variables.less";
+
+.AppPage {
+  min-height: 100vh;
+}
+
+// Mixins
+
+.center {
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+}
+.flex-center {
+  .flex;
+
+  align-content: center;
+  align-items: center;
+}
+
+.rounded-bordered-container(@radius: @border-radius-large) {
+  border-radius: @radius;
+  border: 1px solid @border-color-base;
+}
+

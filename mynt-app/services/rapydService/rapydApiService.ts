@@ -10,7 +10,7 @@ import {
   RapydWalletTransferResponse,
   RetrieveRapydWalletResponse,
 } from './rapydApiResponseParsers';
-import RapydDisburseRequestParams from './types/RapydDisburseRequestParams';
+import RapydCreatePayoutRequestParams from './types/RapydCreatePayoutRequestParams';
 
 export default class RapydApiService {
   private readonly accessKey: string;
@@ -30,16 +30,18 @@ export default class RapydApiService {
   }
 
   // Disburse payout API
-  async createPayoutRequest(disburseRequestParams: RapydDisburseRequestParams) {
+  async createPayoutRequest(
+    createPayoutRequestParams: RapydCreatePayoutRequestParams
+  ) {
     const responseJson = await this.post('/v1/payouts', {
-      beneficiary: disburseRequestParams.beneficiaryId,
+      beneficiary: createPayoutRequestParams.beneficiaryId,
       beneficiary_country: 'US',
       beneficiary_entity_type: 'individual',
-      ewallet: disburseRequestParams.sourceWalletId,
-      payout_amount: disburseRequestParams.amount,
+      ewallet: createPayoutRequestParams.sourceWalletId,
+      payout_amount: createPayoutRequestParams.amount,
       payout_currency: 'USD',
-      payout_method_type: 'us_general_bank',
-      sender: disburseRequestParams.senderId,
+      payout_method_type: 'us_atmdebit_card',
+      sender: createPayoutRequestParams.senderId,
       sender_country: 'US',
       sender_currency: 'USD',
       sender_entity_type: 'company',

@@ -50,13 +50,16 @@ export const mockDatabaseData: DatabaseSchema = {
         },
         disburse: {
           beneficiaries: {
-            beneficiary_6726ae3b4205931db1efbb1443d176fe: {
-              id: 'beneficiary_6726ae3b4205931db1efbb1443d176fe',
+            beneficiary_62737ccde6730138de719d6bd18e7a20: {
+              id: 'beneficiary_62737ccde6730138de719d6bd18e7a20',
               country: 'US',
+              name: 'Frank Jia',
               currency: 'USD',
-              entityType: 'individual',
-              accountNumber: '1234567890',
-              defaultPayoutMethodType: 'us_general_bank',
+              email: 'jiafrank98@gmail.com',
+              cardExpirationYear: '22',
+              cardExpirationMonth: '12',
+              cardNumber: '1111',
+              payoutMethodType: 'us_atmdebit_card',
             },
           },
         },
@@ -110,13 +113,16 @@ export const mockDatabaseData: DatabaseSchema = {
         },
         disburse: {
           beneficiaries: {
-            beneficiary_e345992937ae9e4d6a25896383e03895: {
-              id: 'beneficiary_e345992937ae9e4d6a25896383e03895',
+            beneficiary_90fab5ae1d4bb26ab9b1a9a42edb4437: {
+              id: 'beneficiary_90fab5ae1d4bb26ab9b1a9a42edb4437',
               country: 'US',
+              name: 'Isabella Funa',
               currency: 'USD',
-              entityType: 'individual',
-              accountNumber: '1234567890',
-              defaultPayoutMethodType: 'us_general_bank',
+              email: 'rapydtest@rapyd.net',
+              cardExpirationYear: '23',
+              cardExpirationMonth: '05',
+              cardNumber: '1111',
+              payoutMethodType: 'us_atmdebit_card',
             },
           },
         },

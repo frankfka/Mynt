@@ -1,0 +1,119 @@
+@import '../../styles/globals';
+
+.ProfilePageContent {
+
+  padding: @page-content-padding;
+
+  .ProfileTabs {
+    .rounded-bordered-container();
+
+    height: 70vh;
+    background-color: @background-color-base;
+
+    .ant-tabs-nav-list {
+      padding: @padding-md;
+      background-color: white;
+
+    }
+
+    .ant-tabs-content-holder {
+      padding: @padding-lg;
+      overflow-y: scroll;
+
+      ::-webkit-scrollbar {
+        display: none;
+      }
+      scrollbar-width: none;
+    }
+  }
+
+  .GeneralInformationSection {
+    text-align: center;
+
+    .ProfileImageCol {
+      margin: @margin-lg;
+
+      .ProfileImage {
+        @profile-image-size: 164px;
+
+        height: @profile-image-size;
+        width: @profile-image-size;
+        border-radius: calc(@profile-image-size / 2);
+        margin-bottom: @margin-xss;
+      }
+    }
+
+    .ProfileInfoFormCol {
+      margin-right: @margin-lg;
+    }
+  }
+
+  .WithdrawFundsSection {
+
+    .CurrentBalanceContainer {
+      text-align: center;
+    }
+
+    .WithdrawalMethodsContainer {
+      display: flex;
+      flex-direction: column;
+
+      .ant-divider {
+        margin: 0 0 @margin-sm;
+      }
+
+      .WithdrawalMethodRow {
+        cursor: pointer;
+        .rounded-bordered-container();
+        padding: @padding-sm @padding-lg;
+        background-color: white;
+
+        &:hover {
+          background-color: @item-hover-bg;
+        }
+
+        .CardIconContainer {
+          background-color: @primary-color;
+          width: 36px;
+          height: 36px;
+          border-radius: 18px;
+
+          .flex-center;
+
+          .CardIcon {
+            font-size: @font-size-lg;
+            color: @text-color-inverse;
+            margin: auto;
+          }
+        }
+
+        .BeneficiaryDetailsContainer {
+          margin-left: @margin-md;
+          .BeneficiaryName, .BeneficiaryEmail {
+            margin: 0;
+          }
+        }
+
+        .PayoutDetailsContainer {
+          text-align: end;
+
+          .CountryIcon {
+            width: @avatar-size-sm;
+            object-fit: contain;
+          }
+          .PayoutTitle {
+            margin: 0;
+          }
+
+
+        }
+      }
+
+      .AddNewButton {
+        margin-top: @margin-md;
+        align-self: center;
+      }
+    }
+  }
+}
+

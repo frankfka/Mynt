@@ -43,6 +43,10 @@ export default class DatabaseService {
     this.currentState = 'initialized';
   }
 
+  getGlobalData(): GlobalData {
+    return this.globalData;
+  }
+
   async getUserData(userId: string): Promise<DatabaseUser | undefined> {
     await this.init();
 
