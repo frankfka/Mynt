@@ -22,6 +22,8 @@ export const mockDatabaseData: DatabaseSchema = {
       id: 'c815cb53-5097-42f4-8b27-31b1d7a76614',
       name: 'Frank Jia',
       email: 'jiafrank98@gmail.com',
+      profileImage:
+        'https://avatars.githubusercontent.com/u/31530056?s=400&u=9ca43bcabd1ac6462d03d878713c0fe2d5df965e&v=4',
       profileDescription: '',
 
       rapyd: {
@@ -85,6 +87,8 @@ export const mockDatabaseData: DatabaseSchema = {
       id: 'b7a1ce44-408d-4145-be74-7de58a0ee500',
       name: 'Isabella Funa',
       email: 'isabellafuna@gmail.com',
+      profileImage:
+        'https://avataaars.io/?avatarStyle=Transparent&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=Hoodie&clotheColor=Gray01&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light',
       profileDescription: '',
 
       rapyd: {

@@ -1,7 +1,9 @@
+import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Row } from 'antd';
 import React, { useState } from 'react';
 import NavBar from '../NavBar/NavBar';
 import CreateTokenModal from './CreateTokenModal/CreateTokenModal';
+import TokenBalanceRow from './TokenBalanceRow/TokenBalanceRow';
 
 require('./WalletPage.less');
 
@@ -43,9 +45,12 @@ function WalletPage() {
               <h2>Your Tokens</h2>
             </Col>
             <Col>
-              <Button type="primary" onClick={onCreateTokenClicked}>
-                Create a Token
-              </Button>
+              <Button
+                shape="circle"
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={onCreateTokenClicked}
+              />
             </Col>
           </Row>
           {/*Created tokens*/}
@@ -55,6 +60,13 @@ function WalletPage() {
         {/*Tokens user holds (not created by user)*/}
         <div className="TokenBalancesContainer">
           <h2>Token Balances</h2>
+          <TokenBalanceRow
+            availableSupply={1000000}
+            symbol={'BTC'}
+            currentBalance={20000}
+            name={'Bitcoin'}
+            createdByUser={false}
+          />
         </div>
       </div>
     </div>

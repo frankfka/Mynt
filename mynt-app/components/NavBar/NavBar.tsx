@@ -1,10 +1,14 @@
+import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Col, Image, Row } from 'antd';
 import Link from 'next/link';
-import React from 'react';
+import React, { useContext } from 'react';
+import { UserContext } from '../../context/UserContext';
 
 require('./NavBar.less');
 
 function NavBar() {
+  const userContext = useContext(UserContext);
+
   return (
     <Row align="middle" justify="space-between" className="NavBar">
       <Col>
@@ -30,7 +34,8 @@ function NavBar() {
             <a className="ProfileAvatar">
               <Avatar
                 size="large"
-                src="https://avatars.githubusercontent.com/u/31530056?s=400&u=9ca43bcabd1ac6462d03d878713c0fe2d5df965e&v=4"
+                src={userContext.userData?.dbData.profileImage}
+                icon={<UserOutlined />}
               />
             </a>
           </Link>

@@ -1,5 +1,6 @@
 import { Button, Form, Input, InputNumber, Modal } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
+import CreateTokenSuccessModalContent from './CreateTokenSuccessModalContent';
 
 require('./CreateTokenModal.less');
 
@@ -19,9 +20,21 @@ function CreateTokenModal({
   setIsVisible,
 }: React.PropsWithoutRef<Props>) {
   const [form] = Form.useForm<CreateTokenFormValues>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [createdTokenSymbol, setCreatedTokenSymbol] = useState<string>();
 
   const onFinish = (values: CreateTokenFormValues) => {
     console.log('Received values of form: ', values);
+    setIsSubmitting(true);
+    // TODO: Call api
+    setTimeout(() => setIsSubmitting(false), 5000);
+  };
+
+  const onClose = () => {
+    setCreatedTokenSymbol(undefined);
+    setIsSubmitting(false);
+    form.resetFields();
+    setIsVisible(false);
   };
 
   return (
@@ -29,9 +42,16 @@ function CreateTokenModal({
       title="Create a Token"
       footer={null}
       visible={isVisible}
-      onCancel={() => setIsVisible(false)}
+      onCancel={onClose}
     >
-      <Form layout="vertical" form={form} hideRequiredMark onFinish={onFinish}>
+      <CreateTokenSuccessModalContent symbol={'TODO'} />
+      <Form
+        layout="vertical"
+        form={form}
+        hideRequiredMark
+        onFinish={onFinish}
+        className="CreateTokenForm"
+      >
         <Form.Item
           name="symbol"
           label="Symbol"
@@ -42,7 +62,10 @@ function CreateTokenModal({
             },
           ]}
         >
-          <Input placeholder="Unique symbol for your token (ex. BTC)" />
+          <Input
+            disabled={isSubmitting}
+            placeholder="Unique symbol for your token (ex. BTC)"
+          />
         </Form.Item>
         <Form.Item
           name="name"
@@ -54,7 +77,10 @@ function CreateTokenModal({
             },
           ]}
         >
-          <Input placeholder="Display name for your token" />
+          <Input
+            disabled={isSubmitting}
+            placeholder="Display name for your token"
+          />
         </Form.Item>
         <Form.Item
           name="supply"
@@ -63,14 +89,20 @@ function CreateTokenModal({
           rules={[
             {
               required: true,
-              message: 'Please specify a name for your token',
+              message: 'Please specify total available supply',
             },
           ]}
         >
-          <InputNumber min={1} step={1} precision={0} />
+          <InputNumber min={1} step={1} precision={0} disabled={isSubmitting} />
         </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
+        <Form.Item className="center">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="CreateTokenButton"
+            disabled={isSubmitting}
+            loading={isSubmitting}
+          >
             Create Token
           </Button>
         </Form.Item>

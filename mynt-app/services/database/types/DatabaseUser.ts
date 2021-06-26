@@ -5,6 +5,7 @@ export default interface DatabaseUser {
   id: string;
   name: string;
   email: string;
+  profileImage: string;
   profileDescription: string;
 
   // Rapyd Data
