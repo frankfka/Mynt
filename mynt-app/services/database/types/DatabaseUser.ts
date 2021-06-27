@@ -1,10 +1,11 @@
-import RapydBankBeneficiary from '../../rapydService/types/RapydBankBeneficiary';
+import RapydDebitCardBeneficiary from '../../rapydService/types/RapydDebitCardBeneficiary';
 import { RapydCardPaymentMethod } from '../../rapydService/types/RapydPaymentMethod';
 
 export default interface DatabaseUser {
   id: string;
   name: string;
   email: string;
+  phoneNumber: string;
   profileImage: string;
   profileDescription: string;
 
@@ -18,7 +19,7 @@ export default interface DatabaseUser {
     };
     // For payouts
     disburse: {
-      beneficiaries: Record<string, RapydBankBeneficiary>; // Keyed by beneficiary ID (only support banks)
+      beneficiaries: Record<string, RapydDebitCardBeneficiary>; // Keyed by beneficiary ID (only support banks)
     };
   };
 

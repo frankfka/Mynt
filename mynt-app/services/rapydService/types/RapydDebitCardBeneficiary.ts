@@ -1,4 +1,4 @@
-export default interface RapydBankBeneficiary {
+export default interface RapydDebitCardBeneficiary {
   id: string;
   country: 'US';
   name: string;

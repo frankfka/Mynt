@@ -1,25 +1,28 @@
 import { Button, Col, Form, Image, Input, Row } from 'antd';
-import React from 'react';
+import React, { useContext } from 'react';
+import { UserContext } from '../../../context/UserContext';
 
 const { TextArea } = Input;
 
 function GeneralInformationSection() {
+  const { userData } = useContext(UserContext);
+
   return (
     <Row className="GeneralInformationSection">
       {/*Profile info form*/}
       <Col flex="auto" className="ProfileInfoFormCol">
         <Form layout="vertical">
           <Form.Item label="Display Name">
-            <Input value="Frank Jia" />
+            <Input value={userData?.dbData.name} />
           </Form.Item>
           <Form.Item label="Email">
-            <Input value="jiafrank98@gmail.com" />
+            <Input value={userData?.dbData.email} />
           </Form.Item>
           <Form.Item label="Phone Number">
-            <Input value="7783849871" />
+            <Input value={userData?.dbData.phoneNumber} />
           </Form.Item>
           <Form.Item label="Profile Description">
-            <TextArea value="Lorem ipsum" rows={5} />
+            <TextArea value={userData?.dbData.profileDescription} rows={5} />
           </Form.Item>
           <Form.Item>
             <Button type="primary">Save</Button>
@@ -28,10 +31,7 @@ function GeneralInformationSection() {
       </Col>
       {/*Profile Photo*/}
       <Col className="ProfileImageCol">
-        <Image
-          src="https://avatars.githubusercontent.com/u/31530056?s=400&u=9ca43bcabd1ac6462d03d878713c0fe2d5df965e&v=4"
-          className="ProfileImage"
-        />
+        <Image src={userData?.dbData.profileImage} className="ProfileImage" />
         <div>
           <Button type="link">Edit</Button>
         </div>

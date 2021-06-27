@@ -19,7 +19,6 @@ function ProfilePage() {
           <TabPane tab="General" key="1">
             <GeneralInformationSection />
           </TabPane>
-          {/*Mocked tabs*/}
           <TabPane tab="Recent Activity" key="2" />
           <TabPane tab="Notifications" key="3" />
           <TabPane tab="Appearance" key="4" />
