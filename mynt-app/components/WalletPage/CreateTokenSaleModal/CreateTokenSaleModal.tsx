@@ -2,9 +2,21 @@ import { Button, Form, Input, InputNumber, Modal } from 'antd';
 import React, { useContext, useState } from 'react';
 import { UserContext } from '../../../context/UserContext';
 import CreateUserTokenParams from '../../../services/appService/types/CreateUserTokenParams';
-import CreateTokenSuccessModalContent from './CreateTokenSuccessModalContent';
 
-require('./CreateTokenModal.less');
+require('./CreateTokenSaleModal.less');
+
+/*
+TODO: Form values:
+export default interface DatabaseTokenSale {
+  symbol: string; // This is the ID - can only have one sale per symbol
+  parentUserId: string;
+  unitCost: Cost;
+  availableQuantity: number; // Remaining available quantity
+  description: string;
+}
+
+POST /api/token-sale
+ */
 
 type CreateTokenFormValues = {
   symbol: string;
@@ -18,7 +30,7 @@ type Props = {
   onCreateTokenSuccess(): void;
 };
 
-function CreateTokenModal({
+function CreateTokenSaleModal({
   isVisible,
   setIsVisible,
   onCreateTokenSuccess,
@@ -143,12 +155,13 @@ function CreateTokenModal({
   };
 
   const renderCreateTokenSuccess = (symbol: string) => {
-    return <CreateTokenSuccessModalContent symbol={symbol ?? ''} />;
+    // TODO
+    return null;
   };
 
   return (
     <Modal
-      title="Create a Token"
+      title="Create a Token Sale"
       footer={null}
       visible={isVisible}
       onCancel={onClose}
@@ -160,4 +173,4 @@ function CreateTokenModal({
   );
 }
 
-export default CreateTokenModal;
+export default CreateTokenSaleModal;

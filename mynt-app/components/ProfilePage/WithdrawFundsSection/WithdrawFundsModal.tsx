@@ -62,6 +62,12 @@ const WithdrawFundsModal: React.FC<Props> = ({
         },
       });
 
+      if (response.status !== 200) {
+        throw Error(
+          'Non-successful response status: ' + JSON.stringify(response)
+        );
+      }
+
       const responseJson = await response.json();
 
       const payoutId = get(responseJson, 'data.id');

@@ -32,6 +32,14 @@ export const UserContextProvider: React.FC = ({ children }) => {
 
     try {
       const latestUserDataResponse = await fetch('/api/user/' + userId);
+
+      if (latestUserDataResponse.status !== 200) {
+        throw Error(
+          'Non-successful response status: ' +
+            JSON.stringify(latestUserDataResponse)
+        );
+      }
+
       const latestUserData = await latestUserDataResponse.json();
 
       console.log('Fetched latest user data', latestUserData);

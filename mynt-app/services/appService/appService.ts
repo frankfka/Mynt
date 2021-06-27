@@ -55,6 +55,10 @@ export default class AppService {
     await this.sidechainService.createUserToken(createTokenParams);
   }
 
+  async getAllUserTokens() {
+    return this.sidechainService.getAllUserTokens();
+  }
+
   async getUserToken(symbol: string) {
     return this.sidechainService.getUserToken(symbol);
   }
