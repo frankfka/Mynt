@@ -1,13 +1,16 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Row } from 'antd';
+import { Button, Col, message, Row } from 'antd';
+import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useState } from 'react';
 import { sortBy } from 'lodash';
 import LiskUserToken from '../../../mynt-sidechain/src/app/modules/UserTokens/types/LiskUserToken';
-import UserTokenBalance from '../../../mynt-sidechain/src/app/modules/UserTokens/types/UserTokenBalance';
 import { UserContext } from '../../context/UserContext';
 import NavBar from '../NavBar/NavBar';
 import CreateTokenModal from './CreateTokenModal/CreateTokenModal';
+import CreateTokenRedemptionModal from './CreateTokenRedemptionModal/CreateTokenRedemptionModal';
+import CreateTokenSaleModal from './CreateTokenSaleModal/CreateTokenSaleModal';
 import TokenBalanceRow from './TokenBalanceRow/TokenBalanceRow';
+import UserTokenWalletData from './types/UserTokenWalletData';
 
 require('./WalletPage.less');
 
@@ -24,18 +27,19 @@ function NoTokensPlaceholder() {
   );
 }
 
-type UserTokenWalletData = LiskUserToken &
-  UserTokenBalance & {
-    createdByUser: boolean;
-    hasTokenSale: boolean;
-  };
-
 function WalletPage() {
+  const router = useRouter();
   const { userData, updateUserData } = useContext(UserContext);
 
   const [allUserTokens, setAllUserTokens] = useState<LiskUserToken[]>([]);
+
+  // Modals
   const [isCreateTokenModalVisible, setCreateTokenModalVisible] =
     useState(false);
+  const [createTokenSaleForToken, setCreateTokenSaleForToken] =
+    useState<UserTokenWalletData>();
+  const [createTokenRedemptionForToken, setCreateTokenRedemptionForToken] =
+    useState<UserTokenWalletData>();
 
   const fetchAllUserTokens = async () => {
     try {
@@ -45,8 +49,20 @@ function WalletPage() {
 
       setAllUserTokens(responseJson['userTokens'] as LiskUserToken[]);
     } catch (err) {
+      message.error('Something went wrong. Please try again.');
       console.error('Error fetching user tokens', err);
     }
+  };
+
+  const reloadData = (withTimeout: boolean = false) => {
+    // Set timeout to refetch data after block time, if needed
+    setTimeout(
+      () => {
+        fetchAllUserTokens();
+        updateUserData();
+      },
+      withTimeout ? 12 * 1000 : 0
+    );
   };
 
   // Fetch data on screen load
@@ -59,17 +75,13 @@ function WalletPage() {
     setCreateTokenModalVisible(true);
   };
 
-  const onCreateTokenSuccess = () => {
-    // Set timeout to refetch data after block time
-    setTimeout(() => {
-      fetchAllUserTokens();
-      updateUserData();
-    }, 12 * 1000);
+  const onCreateTokenSaleClicked = (tokenData: UserTokenWalletData) => {
+    setCreateTokenSaleForToken(tokenData);
   };
 
-  const onCreateTokenSaleClicked = (tokenData: UserTokenWalletData) => {};
-
-  const onCreateTokenRedemptionClicked = (tokenData: UserTokenWalletData) => {};
+  const onCreateTokenRedemptionClicked = (tokenData: UserTokenWalletData) => {
+    setCreateTokenRedemptionForToken(tokenData);
+  };
 
   if (userData == null) {
     return null;
@@ -94,6 +106,8 @@ function WalletPage() {
           hasTokenSale: !!userData.dbData.activeTokenSales.find(
             (s) => s === tokenBalance.symbol
           ),
+          hasTokenRedemptions:
+            Object.keys(userData.dbData.activeTokenRedemptions).length > 0,
         };
 
         userTokens.push(walletTokenData);
@@ -126,6 +140,16 @@ function WalletPage() {
                     ? () => onCreateTokenRedemptionClicked(token)
                     : undefined
                 }
+                viewTokenSaleAction={
+                  token.createdByUser && token.hasTokenSale
+                    ? () => router.push(`/token-sales/${token.symbol}`)
+                    : undefined
+                }
+                viewTokenRedemptionsAction={
+                  token.createdByUser && token.hasTokenRedemptions
+                    ? () => {}
+                    : undefined
+                }
               />
             );
           })}
@@ -139,11 +163,37 @@ function WalletPage() {
   return (
     <div className="AppPage">
       <NavBar />
+      {/*Token Sale Modal*/}
+      {createTokenSaleForToken && (
+        <CreateTokenSaleModal
+          userToken={createTokenSaleForToken}
+          isVisible={!!createTokenSaleForToken}
+          setIsVisible={(newVal) => {
+            if (!newVal) {
+              setCreateTokenSaleForToken(undefined);
+            }
+          }}
+          onCreateTokenSaleSuccess={() => reloadData()}
+        />
+      )}
+      {/*Token Sale Modal*/}
+      {createTokenRedemptionForToken && (
+        <CreateTokenRedemptionModal
+          userToken={createTokenRedemptionForToken}
+          isVisible={!!createTokenRedemptionForToken}
+          setIsVisible={(newVal) => {
+            if (!newVal) {
+              setCreateTokenRedemptionForToken(undefined);
+            }
+          }}
+          onCreateTokenRedemptionSuccess={() => reloadData()}
+        />
+      )}
       {/*Create Token Modal*/}
       <CreateTokenModal
         isVisible={isCreateTokenModalVisible}
         setIsVisible={setCreateTokenModalVisible}
-        onCreateTokenSuccess={onCreateTokenSuccess}
+        onCreateTokenSuccess={() => reloadData(true)}
       />
       <div className="WalletPageContent">
         {/*Top row with create button*/}

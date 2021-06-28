@@ -1,4 +1,4 @@
-import { Button, Form, Input, InputNumber, Modal } from 'antd';
+import { Button, Form, Input, InputNumber, message, Modal } from 'antd';
 import React, { useContext, useState } from 'react';
 import { UserContext } from '../../../context/UserContext';
 import CreateUserTokenParams from '../../../services/appService/types/CreateUserTokenParams';
@@ -62,6 +62,7 @@ function CreateTokenModal({
       setCreatedTokenSymbol(values.symbol);
       onCreateTokenSuccess();
     } catch (err) {
+      message.error('Something went wrong. Please try again.');
       console.error('Error creating user token from API', err);
     } finally {
       setIsSubmitting(false);

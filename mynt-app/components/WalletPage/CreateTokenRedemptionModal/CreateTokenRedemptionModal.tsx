@@ -12,64 +12,69 @@ import {
 import Link from 'next/link';
 import React, { useContext, useState } from 'react';
 import { UserContext } from '../../../context/UserContext';
-import CreateUserTokenSaleParams from '../../../services/appService/types/CreateUserTokenSaleParams';
+import CreateUserTokenRedemptionParams from '../../../services/appService/types/CreateUserTokenRedemptionParams';
 import formatCurrency from '../../../util/formatCurrency';
 import parseFormattedCurrency from '../../../util/parseFormattedCurrency';
 import UserTokenWalletData from '../types/UserTokenWalletData';
 
-require('./CreateTokenSaleModal.less');
+require('./CreateTokenRedemptionModal.less');
 
 const { Option } = Select;
 const { TextArea } = Input;
 
-type CreateTokenSaleFormValues = {
-  unitCost: string;
-  availableQuantity: number;
+/*
+  title: string;
   description: string;
+  symbol: string;
+  unitCost: number; // In terms of the symbol (must be less than available supply!)
+  availableQuantity: number; // Remaining qty
+ */
+type CreateTokenRedemptionFormValues = {
+  title: string;
+  description: string;
+  unitCost: number;
+  availableQuantity: number;
 };
 
 type Props = {
   userToken: UserTokenWalletData;
   isVisible: boolean;
   setIsVisible(newVal: boolean): void;
-  onCreateTokenSaleSuccess(): void;
+  onCreateTokenRedemptionSuccess(): void;
 };
 
-function CreateTokenSaleModal({
+function CreateTokenRedemptionModal({
   userToken,
   isVisible,
   setIsVisible,
-  onCreateTokenSaleSuccess,
+  onCreateTokenRedemptionSuccess,
 }: React.PropsWithoutRef<Props>) {
   const { userData } = useContext(UserContext);
-  const [form] = Form.useForm<CreateTokenSaleFormValues>();
+  const [form] = Form.useForm<CreateTokenRedemptionFormValues>();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [didCreateTokenSale, setDidCreateTokenSale] = useState(false);
+  const [createdTokenRedemptionId, setCreatedTokenRedemptionId] =
+    useState<string>();
 
   if (userData == null) {
     return null;
   }
 
-  const onFinish = async (values: CreateTokenSaleFormValues) => {
+  const onFinish = async (values: CreateTokenRedemptionFormValues) => {
     setIsSubmitting(true);
 
-    const unitCostNumber = parseFormattedCurrency(values.unitCost);
-
-    const createTokenSaleData: CreateUserTokenSaleParams = {
+    const createTokenRedemptionData: CreateUserTokenRedemptionParams = {
       symbol: userToken.symbol,
       parentUserId: userData.dbData.id,
-      unitCost: {
-        amount: unitCostNumber,
-        currency: 'USD',
-      },
+      unitCost: values.unitCost,
       availableQuantity: values.availableQuantity,
+      title: values.title,
       description: values.description,
     };
 
     try {
-      const response = await fetch('/api/token-sale', {
+      const response = await fetch('/api/token-redemption', {
         method: 'POST',
-        body: JSON.stringify(createTokenSaleData),
+        body: JSON.stringify(createTokenRedemptionData),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -81,12 +86,19 @@ function CreateTokenSaleModal({
         );
       }
 
+      const responseJson = await response.json();
+      if (!responseJson.redemptionId) {
+        throw Error(
+          'No redemptionId found in response: ' + JSON.stringify(responseJson)
+        );
+      }
+
       // Success
-      setDidCreateTokenSale(true);
-      onCreateTokenSaleSuccess();
+      setCreatedTokenRedemptionId(responseJson.redemptionId);
+      onCreateTokenRedemptionSuccess();
     } catch (err) {
       message.error('Something went wrong. Please try again.');
-      console.error('Error creating user token sale from API', err);
+      console.error('Error creating user token redemption from API', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -96,21 +108,33 @@ function CreateTokenSaleModal({
     setIsVisible(false);
   };
 
-  const renderCreateTokenSaleForm = () => {
+  const renderCreateTokenRedemptionForm = () => {
     return (
       <Form
         layout="vertical"
         form={form}
         requiredMark="optional"
         onFinish={onFinish}
-        className="CreateTokenSaleForm"
+        className="CreateTokenRedemptionForm"
       >
         <p>
-          Sell your {userToken.symbol} on the marketplace by creating a token
-          sale.
+          Create an opportunity for users to redeem {userToken.symbol} for a
+          product or service.
         </p>
         <Form.Item
-          label="Unit Cost"
+          label="Title"
+          name="title"
+          rules={[
+            {
+              required: true,
+              message: 'Please specify a title',
+            },
+          ]}
+        >
+          <Input placeholder="A short title for your redemption" />
+        </Form.Item>
+        <Form.Item
+          label="Unit Cost (Tokens)"
           rules={[
             {
               required: true,
@@ -123,20 +147,15 @@ function CreateTokenSaleModal({
             <InputNumber
               min={1}
               step={1}
-              precision={2}
+              max={userToken.circulatingSupply}
+              precision={0}
               disabled={isSubmitting}
-              formatter={(newVal) => formatCurrency(newVal, true)}
-              parser={parseFormattedCurrency}
             />
-            <Select defaultValue="USD" disabled>
-              <Option value="USD">USD</Option>
-            </Select>
           </Space>
         </Form.Item>
         <Form.Item
           name="availableQuantity"
           label="Available Quantity"
-          tooltip="The total number of tokens you would like to sell"
           rules={[
             {
               required: true,
@@ -153,33 +172,33 @@ function CreateTokenSaleModal({
           />
         </Form.Item>
         <Form.Item label="Description" name="description">
-          <TextArea placeholder="Tell us what your token does." rows={3} />
+          <TextArea placeholder="Describe what you're offering." rows={3} />
         </Form.Item>
         <Form.Item className="center">
           <Button
             type="primary"
             htmlType="submit"
-            className="CreateTokenSaleButton"
+            className="CreateTokenRedemptionButton"
             disabled={isSubmitting}
             loading={isSubmitting}
           >
-            Create Token Sale
+            Create Token Redemption
           </Button>
         </Form.Item>
       </Form>
     );
   };
 
-  const renderCreateTokenSaleSuccess = () => {
+  const renderCreateTokenRedemptionSuccess = (redemptionId: string) => {
     return (
       <Result
         status="success"
         title="Success!"
-        subTitle={`Congratulations! Your token sale for ${userToken.symbol} is now live.`}
+        subTitle={`Congratulations! Your token redemption for ${userToken.symbol} is now live.`}
         extra={
           <Button type="primary">
-            <Link href={`/token-sale/${userToken.symbol}`}>
-              View Token Sale
+            <Link href={`/token-redemption/${redemptionId}`}>
+              View Token Redemption
             </Link>
           </Button>
         }
@@ -189,16 +208,16 @@ function CreateTokenSaleModal({
 
   return (
     <Modal
-      title="Create a Token Sale"
+      title="Create a Token Redemption"
       footer={null}
       visible={isVisible}
       onCancel={onClose}
     >
-      {didCreateTokenSale
-        ? renderCreateTokenSaleSuccess()
-        : renderCreateTokenSaleForm()}
+      {createdTokenRedemptionId
+        ? renderCreateTokenRedemptionSuccess(createdTokenRedemptionId)
+        : renderCreateTokenRedemptionForm()}
     </Modal>
   );
 }
 
-export default CreateTokenSaleModal;
+export default CreateTokenRedemptionModal;

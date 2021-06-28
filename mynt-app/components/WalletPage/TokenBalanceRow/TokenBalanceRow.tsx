@@ -1,16 +1,9 @@
 import { PlusCircleOutlined, SwapOutlined } from '@ant-design/icons';
 import { Button, Col, Divider, Row, Space, Tag } from 'antd';
 import React from 'react';
+import formatNumber from '../../../util/formatNumber';
 
 require('./TokenBalanceRow.less');
-
-/*
-Given:
-- Symbol
-- Name
-- Circulating supply
-- balance
- */
 
 type TokenBalanceRowProps = {
   symbol: string;
@@ -20,9 +13,10 @@ type TokenBalanceRowProps = {
   createdByUser?: boolean;
   createTokenSaleAction?(): void;
   createTokenRedemptionAction?(): void;
+  viewTokenSaleAction?(): void;
+  viewTokenRedemptionsAction?(): void;
 };
 
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat
 const TokenBalanceRow: React.FC<TokenBalanceRowProps> = ({
   symbol,
   availableSupply,
@@ -30,6 +24,8 @@ const TokenBalanceRow: React.FC<TokenBalanceRowProps> = ({
   createdByUser,
   createTokenSaleAction,
   createTokenRedemptionAction,
+  viewTokenSaleAction,
+  viewTokenRedemptionsAction,
   name,
 }: TokenBalanceRowProps) => {
   return (
@@ -42,7 +38,7 @@ const TokenBalanceRow: React.FC<TokenBalanceRowProps> = ({
           )}
         </Space>
         <p>
-          {name} | Available Supply: {availableSupply}
+          {name} | Available Supply: {formatNumber(availableSupply)}
         </p>
       </Col>
       {/*Current Balance*/}
@@ -50,7 +46,7 @@ const TokenBalanceRow: React.FC<TokenBalanceRowProps> = ({
         <div>
           <Space>
             <h3>
-              Balance: {currentBalance} {symbol}
+              Balance: {formatNumber(currentBalance)} {symbol}
             </h3>
             <Divider type="vertical" />
             <Button shape="circle" icon={<SwapOutlined />} />
@@ -58,7 +54,8 @@ const TokenBalanceRow: React.FC<TokenBalanceRowProps> = ({
         </div>
         {createdByUser && (
           <div className="CreateSaleRedemptionButtonContainer">
-            <Space split={<Divider type="vertical" />}>
+            <Space split={<Divider type="vertical" className="m0" />} size={0}>
+              {/*Create actions*/}
               <Button
                 type="link"
                 icon={<PlusCircleOutlined />}
@@ -73,6 +70,21 @@ const TokenBalanceRow: React.FC<TokenBalanceRowProps> = ({
                 onClick={createTokenRedemptionAction}
               >
                 Redemption
+              </Button>
+              {/*View Actions*/}
+              <Button
+                type="link"
+                disabled={viewTokenSaleAction == null}
+                onClick={viewTokenSaleAction}
+              >
+                View Token Sale
+              </Button>
+              <Button
+                type="link"
+                disabled={viewTokenRedemptionsAction == null}
+                onClick={viewTokenRedemptionsAction}
+              >
+                View Redemptions
               </Button>
             </Space>
           </div>

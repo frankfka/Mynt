@@ -12,6 +12,7 @@ import React, { useState } from 'react';
 import CreatePayoutRequestParams from '../../../services/appService/types/CreatePayoutRequestParams';
 import RapydDebitCardBeneficiary from '../../../services/rapydService/types/RapydDebitCardBeneficiary';
 import formatCurrency from '../../../util/formatCurrency';
+import parseFormattedCurrency from '../../../util/parseFormattedCurrency';
 
 const { Option } = Select;
 
@@ -81,6 +82,7 @@ const WithdrawFundsModal: React.FC<Props> = ({
         );
       }
     } catch (err) {
+      message.error('Something went wrong. Please try again.');
       console.error('Error withdrawing funds', err);
     } finally {
       setIsProcessingWithdrawal(false);
@@ -126,7 +128,7 @@ const WithdrawFundsModal: React.FC<Props> = ({
             }}
             value={selectedAmount}
             formatter={(val) => formatCurrency(val, true)}
-            parser={(value) => Number(value?.replace(/\$\s?|(,*)/g, '') ?? '')}
+            parser={parseFormattedCurrency}
             max={availableBalance}
             min={0}
             onChange={setSelectedAmount}
