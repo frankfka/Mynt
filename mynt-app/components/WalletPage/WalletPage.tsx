@@ -142,7 +142,7 @@ function WalletPage() {
                 }
                 viewTokenSaleAction={
                   token.createdByUser && token.hasTokenSale
-                    ? () => router.push(`/token-sales/${token.symbol}`)
+                    ? () => router.push(`/token-sale/${token.symbol}`)
                     : undefined
                 }
                 viewTokenRedemptionsAction={
