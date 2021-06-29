@@ -9,8 +9,8 @@
     "logFileName": "lisk.log"
   },
   "rpc": {
-    "enable": false,
-    "mode": "ipc",
+    "enable": true,
+    "mode": "ws",
     "port": 8080
   },
   "genesisConfig": {
@@ -2228,5 +2228,12 @@
     "minEntranceFeePriority": "0",
     "minReplacementFeeDifference": "10"
   },
-  "plugins": {}
+  "plugins": {
+    "dashboard": {
+      "applicationUrl": "ws://localhost:8080/ws",
+      "port": 4005,
+      "host": "127.0.0.1",
+      "applicationName": "Mynt"
+    }
+  }
 }
