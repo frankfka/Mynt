@@ -1,0 +1,36 @@
+@import '../../styles/globals';
+
+// Main Page Content
+.TokenRedemptionPageContent {
+  padding: @page-content-padding;
+
+  .TokenRedemptionInfoContainer {
+    .rounded-bordered-container();
+    padding: calc(@padding-lg * 2);
+
+    .TokenRedemptionHostUserContainer {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
+      .HostUserProfileImage {
+        @profile-image-size: 256px;
+
+        width: @profile-image-size;
+        height: @profile-image-size;
+        object-fit: contain;
+        border-radius: calc(@profile-image-size / 2);
+
+        margin-bottom: @margin-md;
+      }
+    }
+
+    .TokenRedemptionDetailsContainer {
+      .UserHostedTag {
+        background-color: @background-color-secondary;
+        border: 1px solid @primary-color;
+      }
+    }
+  }
+}
+

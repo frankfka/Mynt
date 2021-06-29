@@ -48,10 +48,13 @@ function TokenSalePage({ symbol }: PropsWithoutRef<{ symbol: string }>) {
       }
 
       const tokenSaleResponseJson = await tokenSaleResponse.json();
+      const tokenSaleObject = tokenSaleResponseJson as DatabaseTokenSale;
 
-      setTokenSale(tokenSaleResponseJson as DatabaseTokenSale);
+      setTokenSale(tokenSaleObject);
 
-      const hostResponse = await fetch(`/api/user/${userId}`);
+      const hostResponse = await fetch(
+        `/api/user/${tokenSaleObject.parentUserId}`
+      );
 
       if (hostResponse.status !== 200) {
         throw Error(
