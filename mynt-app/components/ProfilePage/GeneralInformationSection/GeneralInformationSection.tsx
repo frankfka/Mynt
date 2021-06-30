@@ -1,12 +1,12 @@
-import { Button, Col, Form, Image, Input, Row } from 'antd';
+import { Button, Col, Form, Image, Input, Row, Space } from 'antd';
 import React, { useContext } from 'react';
-import { UserContext } from '../../../context/UserContext';
+import { MockUserIds, UserContext } from '../../../context/UserContext';
 import LoadingView from '../../LoadingView/LoadingView';
 
 const { TextArea } = Input;
 
 function GeneralInformationSection() {
-  const { userData } = useContext(UserContext);
+  const { userId, userData, switchUser } = useContext(UserContext);
 
   if (userData == null) {
     return (
@@ -15,6 +15,14 @@ function GeneralInformationSection() {
       </div>
     );
   }
+
+  const onSwitchUserClicked = () => {
+    if (userId === MockUserIds.frank) {
+      switchUser(MockUserIds.isabella);
+    } else {
+      switchUser(MockUserIds.frank);
+    }
+  };
 
   return (
     <Row className="GeneralInformationSection">
@@ -42,7 +50,12 @@ function GeneralInformationSection() {
       <Col className="ProfileImageCol">
         <Image src={userData.dbData.profileImage} className="ProfileImage" />
         <div>
-          <Button type="link">Edit</Button>
+          <Space direction="vertical">
+            <Button type="link">Edit</Button>
+            <Button type="link" onClick={onSwitchUserClicked}>
+              Switch User
+            </Button>
+          </Space>
         </div>
       </Col>
     </Row>

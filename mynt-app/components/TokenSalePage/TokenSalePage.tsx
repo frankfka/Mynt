@@ -161,12 +161,10 @@ function TokenSalePage({ symbol }: PropsWithoutRef<{ symbol: string }>) {
   };
 
   // Payment section
-  const renderPaymentSection = (): React.ReactElement => {
-    // TODO: enable
-    // TODO: success modal
-    // if (isHostedByUser) {
-    //   return null;
-    // }
+  const renderPaymentSection = (): React.ReactElement | null => {
+    if (isHostedByUser) {
+      return null;
+    }
 
     return (
       <div className="PaymentSection">

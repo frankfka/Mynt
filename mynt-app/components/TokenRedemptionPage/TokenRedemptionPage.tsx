@@ -169,11 +169,10 @@ function TokenRedemptionPage({
   };
 
   // Payment section
-  const renderPaymentSection = (): React.ReactElement => {
-    // TODO: enable
-    // if (isHostedByUser) {
-    //   return null;
-    // }
+  const renderPaymentSection = (): React.ReactElement | null => {
+    if (isHostedByUser) {
+      return null;
+    }
 
     return (
       <div className="PaymentSection">

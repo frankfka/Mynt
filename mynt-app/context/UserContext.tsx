@@ -22,12 +22,32 @@ export const UserContext = createContext<UserContextData>({
 });
 
 export const UserContextProvider: React.FC = ({ children }) => {
-  const [userId, setUserId] = useState(MockUserIds.frank);
+  const [userId, setUserId] = useState<string>();
   const [isUpdating, setIsUpdating] = useState(false);
   const [userData, setUserData] = useState<User>();
 
-  const switchUser = (newUserId: string) => setUserId(newUserId);
+  useEffect(() => {
+    if (userId != null) {
+      localStorage.setItem('currentUserId', userId);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (userId == null) {
+      const currentUserId = localStorage.getItem('currentUserId');
+      setUserId(!!currentUserId ? currentUserId : MockUserIds.frank);
+    }
+  }, [userId]);
+
+  const switchUser = (newUserId: string) => {
+    setUserData(undefined);
+    setUserId(newUserId);
+  };
   const updateUserData = useCallback(async () => {
+    if (!userId) {
+      return;
+    }
+
     setIsUpdating(true);
 
     try {
@@ -55,10 +75,10 @@ export const UserContextProvider: React.FC = ({ children }) => {
   // Call update user data on load to greedily load the user
   useEffect(() => {
     updateUserData();
-  }, [updateUserData]);
+  }, [updateUserData, userId]);
 
   const userContextData: UserContextData = {
-    userId,
+    userId: userId || '',
     switchUser,
     isUpdating,
     userData,
