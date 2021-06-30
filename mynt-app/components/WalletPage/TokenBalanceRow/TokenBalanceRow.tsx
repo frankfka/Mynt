@@ -32,12 +32,12 @@ const TokenBalanceRow: React.FC<TokenBalanceRowProps> = ({
     <Row className="TokenBalanceRow" align="middle">
       <Col flex="auto">
         <Space>
-          <h3>{symbol}</h3>
+          <h3 className="m0">{symbol}</h3>
           {createdByUser && (
             <Tag className="UserCreatedTag">Created By You</Tag>
           )}
         </Space>
-        <p>
+        <p className="TokenDetailsText">
           {name} | Available Supply: {formatNumber(availableSupply)}
         </p>
       </Col>
@@ -45,7 +45,7 @@ const TokenBalanceRow: React.FC<TokenBalanceRowProps> = ({
       <Col className="BalanceActionsCol">
         <div>
           <Space>
-            <h3>
+            <h3 className="m0">
               Balance: {formatNumber(currentBalance)} {symbol}
             </h3>
             <Divider type="vertical" />
@@ -54,7 +54,7 @@ const TokenBalanceRow: React.FC<TokenBalanceRowProps> = ({
         </div>
         {createdByUser && (
           <div className="CreateSaleRedemptionButtonContainer">
-            <Space split={<Divider type="vertical" className="m0" />} size={0}>
+            <Space split={<Divider type="vertical" className="m0" />}>
               {/*Create actions*/}
               <Button
                 type="link"

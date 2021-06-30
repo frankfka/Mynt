@@ -169,8 +169,8 @@ function TokenSalePage({ symbol }: PropsWithoutRef<{ symbol: string }>) {
     // }
 
     return (
-      <div>
-        <h2>Purchase {tokenSale.symbol}</h2>
+      <div className="PaymentSection">
+        <h3>Purchase {tokenSale.symbol}</h3>
         <Space direction="vertical">
           {/*Payment method radios*/}
           <div>
@@ -264,7 +264,7 @@ function TokenSalePage({ symbol }: PropsWithoutRef<{ symbol: string }>) {
           <Row justify="space-between">
             {/*Sale details + purchase*/}
             <Col className="TokenSaleDetailsContainer">
-              <h1>
+              <h1 className="m0">
                 {tokenSale.symbol} - {formatCurrency(tokenSale.unitCost.amount)}{' '}
                 USD
               </h1>
@@ -281,7 +281,12 @@ function TokenSalePage({ symbol }: PropsWithoutRef<{ symbol: string }>) {
                   </>
                 )}
               </Space>
-              <p>{tokenSale.description}</p>
+              {tokenSale.description && (
+                <div className="DescriptionSection">
+                  <h3>Details</h3>
+                  <p>{tokenSale.description}</p>
+                </div>
+              )}
               {renderPaymentSection()}
             </Col>
             {/*Owner Profile*/}

@@ -95,6 +95,9 @@ function TokenRedemptionPage({
               status="error"
               title="Not Found"
               subTitle="This token redemption was not found"
+              style={{
+                margin: 'auto',
+              }}
             />
           ) : (
             <LoadingView />
@@ -168,13 +171,13 @@ function TokenRedemptionPage({
   // Payment section
   const renderPaymentSection = (): React.ReactElement => {
     // TODO: enable
-    // TODO: success modal
     // if (isHostedByUser) {
     //   return null;
     // }
 
     return (
-      <div>
+      <div className="PaymentSection">
+        <h3>Redeem {tokenRedemption.symbol}</h3>
         <Space direction="vertical">
           {/*Quantity*/}
           <Space direction="horizontal">
@@ -200,7 +203,7 @@ function TokenRedemptionPage({
               `| ${formatNumber(costInTokens)} ${tokenRedemption.symbol}`}
           </Button>
           {/*Current Funds*/}
-          <p>
+          <p style={{ fontStyle: 'italic' }}>
             You currently have {formatNumber(userTokenBalance)}{' '}
             {tokenRedemption.symbol}.
           </p>
@@ -219,7 +222,7 @@ function TokenRedemptionPage({
           <Row justify="space-between">
             {/*Sale details + purchase*/}
             <Col className="TokenRedemptionDetailsContainer">
-              <h1>{tokenRedemption.title}</h1>
+              <h1 className="m0">{tokenRedemption.title}</h1>
               <Space split={<Divider type="vertical" />}>
                 <h4 className="m0">
                   {formatNumber(tokenRedemption.unitCost)}{' '}
@@ -238,7 +241,12 @@ function TokenRedemptionPage({
                   </>
                 )}
               </Space>
-              <p>{tokenRedemption.description}</p>
+              {tokenRedemption.description && (
+                <div className="DescriptionSection">
+                  <h3>Details</h3>
+                  <p>{tokenRedemption.description}</p>
+                </div>
+              )}
               {renderPaymentSection()}
             </Col>
             {/*Owner Profile*/}

@@ -1,5 +1,5 @@
 import { CreditCardOutlined } from '@ant-design/icons';
-import { Image, Row, Col, Divider } from 'antd';
+import { Image, Row, Col, Divider, Space } from 'antd';
 import React from 'react';
 import RapydDebitCardBeneficiary from '../../../services/rapydService/types/RapydDebitCardBeneficiary';
 
@@ -31,7 +31,7 @@ const WithdrawalMethodRow: React.FC<Props> = ({ onClick, beneficiary }) => {
           />
           <h3 className="PayoutTitle">US Debit</h3>
         </Row>
-        <Row align="middle" justify="end">
+        <Space split={<Divider type="vertical" />}>
           <small className="PayoutDetailsItem">
             Ending in: {beneficiary.cardNumber}
           </small>
@@ -39,7 +39,7 @@ const WithdrawalMethodRow: React.FC<Props> = ({ onClick, beneficiary }) => {
             Exp: {beneficiary.cardExpirationMonth}/
             {beneficiary.cardExpirationYear}
           </small>
-        </Row>
+        </Space>
       </Col>
     </Row>
   );

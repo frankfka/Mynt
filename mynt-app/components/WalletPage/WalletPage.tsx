@@ -1,10 +1,11 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, message, Row } from 'antd';
+import { Button, Col, message, Row, Space } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useState } from 'react';
 import { sortBy } from 'lodash';
 import LiskUserToken from '../../../mynt-sidechain/src/app/modules/UserTokens/types/LiskUserToken';
 import { UserContext } from '../../context/UserContext';
+import LoadingView from '../LoadingView/LoadingView';
 import NavBar from '../NavBar/NavBar';
 import CreateTokenModal from './CreateTokenModal/CreateTokenModal';
 import CreateTokenRedemptionModal from './CreateTokenRedemptionModal/CreateTokenRedemptionModal';
@@ -16,13 +17,15 @@ require('./WalletPage.less');
 
 function NoTokensPlaceholder() {
   return (
-    <div className="center">
-      <h2>No Tokens</h2>
-      <p>
-        It looks like you don&apos;t have any tokens. You can purchase tokens
-        that someone else has created through their token sales. You can also
-        try creating your own token - it takes less than a minute!
-      </p>
+    <div className="center NoTokensPlaceholderContainer">
+      <div className="NoTokensPlaceholderTextContainer">
+        <h2>It looks like you don&apos;t have any tokens.</h2>
+        <p>
+          You can purchase tokens that someone else has created through their
+          token sales. You can also try creating your own token - it takes less
+          than a minute!
+        </p>
+      </div>
     </div>
   );
 }
@@ -31,7 +34,7 @@ function WalletPage() {
   const router = useRouter();
   const { userData, updateUserData } = useContext(UserContext);
 
-  const [allUserTokens, setAllUserTokens] = useState<LiskUserToken[]>([]);
+  const [allUserTokens, setAllUserTokens] = useState<LiskUserToken[]>();
 
   // Modals
   const [isCreateTokenModalVisible, setCreateTokenModalVisible] =
@@ -40,6 +43,7 @@ function WalletPage() {
     useState<UserTokenWalletData>();
   const [createTokenRedemptionForToken, setCreateTokenRedemptionForToken] =
     useState<UserTokenWalletData>();
+  const [fetchTokenError, setFetchTokenError] = useState(false);
 
   const fetchAllUserTokens = async () => {
     try {
@@ -51,6 +55,7 @@ function WalletPage() {
     } catch (err) {
       message.error('Something went wrong. Please try again.');
       console.error('Error fetching user tokens', err);
+      setFetchTokenError(true);
     }
   };
 
@@ -83,8 +88,15 @@ function WalletPage() {
     setCreateTokenRedemptionForToken(tokenData);
   };
 
-  if (userData == null) {
-    return null;
+  if (userData == null || allUserTokens == null) {
+    return (
+      <div className="AppPage">
+        <NavBar />
+        <div style={{ display: 'flex', minHeight: '70vh' }}>
+          {fetchTokenError ? null : <LoadingView />}
+        </div>
+      </div>
+    );
   }
 
   const userTokens: UserTokenWalletData[] = [];
@@ -197,19 +209,15 @@ function WalletPage() {
       />
       <div className="WalletPageContent">
         {/*Top row with create button*/}
-        <Row align="middle">
-          <Col>
-            <h1 className="m0">Your Wallet</h1>
-          </Col>
-          <Col>
-            <Button
-              shape="circle"
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={onCreateTokenClicked}
-            />
-          </Col>
-        </Row>
+        <Space className="WalletPageHeader">
+          <h1 className="m0">Your Wallet</h1>
+          <Button
+            shape="circle"
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={onCreateTokenClicked}
+          />
+        </Space>
         {/*Token Balances*/}
         <div className="TokenBalanceRowsContainer">
           {renderUserTokensContent()}

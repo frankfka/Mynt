@@ -4,6 +4,7 @@ import React, { useContext, useState } from 'react';
 import { UserContext } from '../../../context/UserContext';
 import RapydDebitCardBeneficiary from '../../../services/rapydService/types/RapydDebitCardBeneficiary';
 import formatCurrency from '../../../util/formatCurrency';
+import LoadingView from '../../LoadingView/LoadingView';
 import WithdrawalMethodRow from './WithdrawalMethodRow';
 import WithdrawFundsModal from './WithdrawFundsModal';
 
@@ -12,8 +13,12 @@ function WithdrawFundsSection() {
   const [selectedBeneficiary, setSelectedBeneficiary] =
     useState<RapydDebitCardBeneficiary>();
 
-  if (!userData) {
-    return null;
+  if (userData == null) {
+    return (
+      <div style={{ display: 'flex', height: '100%' }}>
+        <LoadingView />
+      </div>
+    );
   }
 
   const userBeneficiaries = Object.values(
@@ -50,7 +55,7 @@ function WithdrawFundsSection() {
       {/*Withdrawal Methods*/}
       <div className="WithdrawalMethodsContainer">
         <h2>Withdrawal Methods</h2>
-        <Divider />
+        <Divider className="WithdrawalMethodsHeaderDivider" />
         {userBeneficiaries.map((beneficiary) => {
           return (
             <WithdrawalMethodRow

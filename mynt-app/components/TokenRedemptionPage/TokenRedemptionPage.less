@@ -4,9 +4,18 @@
 .TokenRedemptionPageContent {
   padding: @page-content-padding;
 
+  .DescriptionSection {
+    margin-top: @margin-lg;
+  }
+
+  .PaymentSection {
+    margin-top: @margin-lg;
+  }
+
   .TokenRedemptionInfoContainer {
     .rounded-bordered-container();
     padding: calc(@padding-lg * 2);
+    background-color: @background-color-tertiary;
 
     .TokenRedemptionHostUserContainer {
       display: flex;
@@ -27,7 +36,7 @@
 
     .TokenRedemptionDetailsContainer {
       .UserHostedTag {
-        background-color: @background-color-secondary;
+        background-color: @background-color-primary;
         border: 1px solid @primary-color;
       }
     }

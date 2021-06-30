@@ -3,9 +3,14 @@
 .TokenBalanceRow {
   .rounded-bordered-container();
   padding: @padding-md;
+  background-color: @background-color-tertiary;
+
+  &:hover {
+    background-color: @background-color-secondary;
+  }
 
   .UserCreatedTag {
-    background-color: @background-color-secondary;
+    background-color: @background-color-primary;
     border: 1px solid @primary-color;
   }
 
@@ -13,7 +18,16 @@
     margin-top: @margin-xs;
   }
 
+  .TokenDetailsText {
+    margin-top: @margin-sm;
+    margin-bottom: 0;
+  }
+
   .BalanceActionsCol {
-    text-align: center;
+    text-align: end;
+
+    .ant-btn {
+      padding: 0;
+    }
   }
 }

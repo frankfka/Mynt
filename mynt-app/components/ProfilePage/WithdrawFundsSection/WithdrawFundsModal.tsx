@@ -142,7 +142,11 @@ const WithdrawFundsModal: React.FC<Props> = ({
           <Button
             type="primary"
             loading={isProcessingWithdrawal}
-            disabled={isProcessingWithdrawal}
+            disabled={
+              isProcessingWithdrawal ||
+              selectedAmount === 0 ||
+              selectedAmount > availableBalance
+            }
             onClick={onWithdrawButtonClicked}
           >
             Withdraw Now
