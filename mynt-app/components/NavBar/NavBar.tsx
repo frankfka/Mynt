@@ -1,5 +1,6 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Image, Row } from 'antd';
+import { Avatar, Button, Col, Row } from 'antd';
+import Image from 'next/image';
 import Link from 'next/link';
 import React, { useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
@@ -12,10 +13,7 @@ function NavBar() {
   return (
     <Row align="middle" justify="space-between" className="NavBar">
       <Col>
-        <Image
-          src="https://www.rapyd.net/wp-content/uploads/2020/02/rapyd-logo-png-reverse.png"
-          height={32}
-        />
+        <Image src={'/header_logo.png'} height={48} width={48} />
       </Col>
       <Col className="MenuItems">
         <Row align="middle">
