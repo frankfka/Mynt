@@ -25,7 +25,12 @@ export const mockDatabaseData: DatabaseSchema = {
       phoneNumber: '7783849871',
       profileImage:
         'https://avatars.githubusercontent.com/u/31530056?s=400&u=9ca43bcabd1ac6462d03d878713c0fe2d5df965e&v=4',
-      profileDescription: '',
+      profileDescription:
+        'Hello! I am an aspiring Youtube content creator located in Vancouver, Canada. ' +
+        'I specialize in creating content centered around the latest developments in software development ' +
+        'and engineering. My videos are short, attention-grabbing, and easily digestible, as opposed to the ' +
+        'multi-hour long tutorials that currently exist. These are meant to be "snack"-sized and entertaining. I hope to become the go-to resource ' +
+        'for casual learning on Youtube, Tiktok, and other social media platforms.',
 
       rapyd: {
         eWalletId: 'ewallet_68abae90037a6768f64ce4389675d576',

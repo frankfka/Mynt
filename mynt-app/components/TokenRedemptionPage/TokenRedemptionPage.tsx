@@ -218,9 +218,9 @@ function TokenRedemptionPage({
       {/*Main Page Content*/}
       <div className="TokenRedemptionPageContent">
         <div className="TokenRedemptionInfoContainer">
-          <Row justify="space-between">
+          <Row justify="space-between" wrap={false}>
             {/*Sale details + purchase*/}
-            <Col className="TokenRedemptionDetailsContainer">
+            <Col className="TokenRedemptionDetailsContainer" flex="1">
               <h1 className="m0">{tokenRedemption.title}</h1>
               <Space split={<Divider type="vertical" />}>
                 <h4 className="m0">
@@ -256,10 +256,12 @@ function TokenRedemptionPage({
               />
               <h3>Hosted by: {tokenRedemptionHostUser.dbData.name}</h3>
               {tokenRedemptionHostUser.dbData.profileDescription && (
-                <div>
+                <>
                   <h4>User Profile</h4>
-                  <p>{tokenRedemptionHostUser.dbData.profileDescription}</p>
-                </div>
+                  <p style={{ maxWidth: '30vw' }}>
+                    {tokenRedemptionHostUser.dbData.profileDescription}
+                  </p>
+                </>
               )}
             </Col>
           </Row>

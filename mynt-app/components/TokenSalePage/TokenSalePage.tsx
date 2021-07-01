@@ -259,9 +259,9 @@ function TokenSalePage({ symbol }: PropsWithoutRef<{ symbol: string }>) {
       {/*Main Page Content*/}
       <div className="TokenSalePageContent">
         <div className="TokenSaleInfoContainer">
-          <Row justify="space-between">
+          <Row justify="space-between" wrap={false}>
             {/*Sale details + purchase*/}
-            <Col className="TokenSaleDetailsContainer">
+            <Col className="TokenSaleDetailsContainer" flex="1">
               <h1 className="m0">
                 {tokenSale.symbol} - {formatCurrency(tokenSale.unitCost.amount)}{' '}
                 USD
@@ -295,10 +295,12 @@ function TokenSalePage({ symbol }: PropsWithoutRef<{ symbol: string }>) {
               />
               <h3>Hosted by: {tokenSaleHostUser.dbData.name}</h3>
               {tokenSaleHostUser.dbData.profileDescription && (
-                <div>
+                <>
                   <h4>User Profile</h4>
-                  <p>{tokenSaleHostUser.dbData.profileDescription}</p>
-                </div>
+                  <p style={{ maxWidth: '30vw' }}>
+                    {tokenSaleHostUser.dbData.profileDescription}
+                  </p>
+                </>
               )}
             </Col>
           </Row>
